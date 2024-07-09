@@ -1,0 +1,22 @@
+{
+    "destinations": [
+      "Paris",
+      "New York",
+      "Tokyo",
+      "Sydney",
+      "London",
+      "Berlin",
+      "Rome",
+      "Barcelona",
+      "Dubai",
+      "San Francisco"
+    ],
+    "vacationTypes": [
+      "Rest",
+      "Beach",
+      "Parks",
+      "Adventure",
+      "Culture"
+    ]
+  }
+  
