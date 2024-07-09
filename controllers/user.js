@@ -52,19 +52,6 @@ exports.setUserPreferences = async (req, res) => {
     );
     res.status(200).json({ success: true, data: preferences });
   } catch (error) {
-    res.status 500).json({ success: false, error: 'Failed to set preferences' });
+    res.status(500).json({ success: false, error: 'Failed to set preferences' });
   }
-};
-
-const fs = require('fs');
-const path = require('path');
-
-exports.getVacationOptions = (req, res) => {
-  const filePath = path.join(__dirname, '../vacationOptions.json');
-  fs.readFile(filePath, 'utf8', (err, data) => {
-    if (err) {
-      return res.status(500).json({ success: false, error: 'Failed to read vacation options' });
-    }
-    res.status(200).json({ success: true, data: JSON.parse(data) });
-  });
 };
