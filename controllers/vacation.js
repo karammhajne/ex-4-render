@@ -12,7 +12,7 @@ exports.calculateVacation = async (req, res) => {
     const vacationType = calculateMajority(preferences.map(p => p.vacationType));
     const { startDate, endDate } = calculateDateOverlap(preferences);
 
-    const weatherResponse = await axios.get(`https://api.weatherapi.com/v1/current.json?key=${process.env.WEATHER_API_KEY}&q=${destination}`);
+    const weatherResponse = await axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${destination}&appid=${process.env.WEATHER_API_KEY}`);
     const weather = weatherResponse.data;
 
     res.status(200).json({
