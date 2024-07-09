@@ -1,7 +1,7 @@
 const User = require('../models/user');
+const Preferences = require('../models/preferences');
 const jwt = require('jsonwebtoken');
 
-// פונקציית רישום משתמש חדש
 exports.registerUser = async (req, res) => {
   const { username, password } = req.body;
   try {
@@ -16,7 +16,6 @@ exports.registerUser = async (req, res) => {
   }
 };
 
-// פונקציית התחברות
 exports.loginUser = async (req, res) => {
   const { username, password } = req.body;
   try {
@@ -34,20 +33,6 @@ exports.loginUser = async (req, res) => {
   }
 };
 
-// פונקציית קבלת העדפות משתמשים
-exports.getUserPreferences = async (req, res) => {
-  // למימוש
-};
-
-// פונקציית עריכת העדפות משתמשים
-exports.setUserPreferences = async (req, res) => {
-  // למימוש
-};
-
-
-const Preferences = require('../models/preferences');
-
-// פונקציית קבלת העדפות משתמשים
 exports.getUserPreferences = async (req, res) => {
   try {
     const preferences = await Preferences.find();
@@ -57,7 +42,6 @@ exports.getUserPreferences = async (req, res) => {
   }
 };
 
-// פונקציית עריכת העדפות משתמשים
 exports.setUserPreferences = async (req, res) => {
   const { userId, startDate, endDate, destination, vacationType } = req.body;
   try {
@@ -68,6 +52,6 @@ exports.setUserPreferences = async (req, res) => {
     );
     res.status(200).json({ success: true, data: preferences });
   } catch (error) {
-    res.status(500).json({ success: false, error: 'Failed to set preferences' });
+    res.status 500).json({ success: false, error: 'Failed to set preferences' });
   }
 };
