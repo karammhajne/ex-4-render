@@ -1,7 +1,7 @@
-const Preferences = require('../models/preferences');
-const axios = require('axios');
+import Preferences from '../models/preferences.js';
+import axios from 'axios';
 
-exports.calculateVacation = async (req, res) => {
+export const calculateVacation = async (req, res) => {
   try {
     const preferences = await Preferences.find();
     if (preferences.length < 5) {
@@ -45,3 +45,4 @@ function calculateDateOverlap(preferences) {
 
   return { startDate: latestStartDate, endDate: earliestEndDate };
 }
+
