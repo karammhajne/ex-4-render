@@ -1,8 +1,8 @@
-const User = require('../models/user');
-const Preferences = require('../models/preferences');
-const jwt = require('jsonwebtoken');
+import User from '../models/user.js';
+import Preferences from '../models/preferences.js';
+import jwt from 'jsonwebtoken';
 
-exports.registerUser = async (req, res) => {
+export const registerUser = async (req, res) => {
   const { username, password } = req.body;
   try {
     const user = await User.create({ username, password });
@@ -16,7 +16,7 @@ exports.registerUser = async (req, res) => {
   }
 };
 
-exports.loginUser = async (req, res) => {
+export const loginUser = async (req, res) => {
   const { username, password } = req.body;
   try {
     const user = await User.findOne({ username });
@@ -33,7 +33,7 @@ exports.loginUser = async (req, res) => {
   }
 };
 
-exports.getUserPreferences = async (req, res) => {
+export const getUserPreferences = async (req, res) => {
   try {
     const preferences = await Preferences.find();
     res.status(200).json({ success: true, data: preferences });
@@ -42,7 +42,7 @@ exports.getUserPreferences = async (req, res) => {
   }
 };
 
-exports.setUserPreferences = async (req, res) => {
+export const setUserPreferences = async (req, res) => {
   const { userId, startDate, endDate, destination, vacationType } = req.body;
   try {
     const preferences = await Preferences.findOneAndUpdate(
