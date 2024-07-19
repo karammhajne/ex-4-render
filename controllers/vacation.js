@@ -46,3 +46,4 @@ function calculateDateOverlap(preferences) {
   return { startDate: latestStartDate, endDate: earliestEndDate };
 }
 
+
