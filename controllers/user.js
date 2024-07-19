@@ -1,6 +1,21 @@
 import User from '../models/user.js';
-import Preferences from '../models/preferences.js';
 import jwt from 'jsonwebtoken';
+import Preferences from '../models/preferences.js';
+
+export const registerUsers = async (req, res) => {
+  const users = req.body.users;
+  try {
+    const registeredUsers = await User.insertMany(users);
+    const accessTokens = registeredUsers.map(user => user.getSignedJwtToken());
+    res.status(201).json({
+      success: true,
+      data: registeredUsers,
+      accessTokens
+    });
+  } catch (error) {
+    res.status(400).json({ success: false, error: 'Failed to register users' });
+  }
+};
 
 export const registerUser = async (req, res) => {
   const { username, password } = req.body;
