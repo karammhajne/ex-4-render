@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const preferencesSchema = new mongoose.Schema({
   user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
@@ -8,4 +8,5 @@ const preferencesSchema = new mongoose.Schema({
   vacationType: { type: String, required: true }
 });
 
-module.exports = mongoose.model('Preferences', preferencesSchema);
+export default mongoose.model('Preferences', preferencesSchema);
+
