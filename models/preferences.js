@@ -1,11 +1,49 @@
-import mongoose from 'mongoose';
+import { DataTypes } from 'sequelize';
+import sequelize from './index.js';
+import User from './user.js';
 
-const preferencesSchema = new mongoose.Schema({
-  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-  startDate: { type: Date, required: true },
-  endDate: { type: Date, required: true },
-  destination: { type: String, required: true },
-  vacationType: { type: String, required: true }
+const Preferences = sequelize.define('Preferences', {
+  id: {
+    type: DataTypes.INTEGER,
+    autoIncrement: true,
+    primaryKey: true,
+    field: 'id'
+  },
+  userID: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    references: {
+      model: User,
+      key: 'id'
+    },
+    field: 'userID'
+  },
+  startDate: {
+    type: DataTypes.DATE,
+    allowNull: false,
+    field: 'startDate'
+  },
+  endDate: {
+    type: DataTypes.DATE,
+    allowNull: false,
+    field: 'endDate'
+  },
+  destination: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    field: 'destination'
+  },
+  vacationType: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    field: 'vacationType'
+  }
+}, {
+  tableName: 'tbl_35_preferences',
+  timestamps: false
 });
 
-export default mongoose.model('Preferences', preferencesSchema);
+User.hasMany(Preferences, { foreignKey: 'userID' });
+Preferences.belongsTo(User, { foreignKey: 'userID' });
+
+export default Preferences;
