@@ -1,72 +1,40 @@
 import User from '../models/user.js';
+import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import Preferences from '../models/preferences.js';
-
-export const registerUsers = async (req, res) => {
-  const users = req.body.users;
-  try {
-    const registeredUsers = await User.insertMany(users);
-    const accessTokens = registeredUsers.map(user => user.getSignedJwtToken());
-    res.status(201).json({
-      success: true,
-      data: registeredUsers,
-      accessTokens
-    });
-  } catch (error) {
-    res.status(400).json({ success: false, error: 'Failed to register users' });
-  }
-};
+import { v4 as uuidv4 } from 'uuid';  // Import UUID library for generating unique values
 
 export const registerUser = async (req, res) => {
   const { username, password } = req.body;
   try {
-    const user = await User.create({ username, password });
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const userAccessCode = uuidv4();  // Generate a unique access code
+    const user = await User.create({ userName: username, userPassword: hashedPassword, userAccessCode });
+    const token = user.getSignedJwtToken();
     res.status(201).json({
       success: true,
       data: user,
-      accessToken: user.getSignedJwtToken()
+      accessToken: token
     });
   } catch (error) {
-    res.status(400).json({ success: false, error: 'Failed to register user' });
+    console.error('Error registering user:', error);  // Log the detailed error
+    res.status(400).json({ success: false, error: 'Failed to register user', message: error.message, details: error.errors });
   }
 };
 
 export const loginUser = async (req, res) => {
   const { username, password } = req.body;
   try {
-    const user = await User.findOne({ username });
+    const user = await User.findOne({ where: { userName: username } });
     if (!user || !(await user.matchPassword(password))) {
       return res.status(401).json({ success: false, error: 'Invalid credentials' });
     }
+    const token = user.getSignedJwtToken();
     res.status(200).json({
       success: true,
       data: user,
-      accessToken: user.getSignedJwtToken()
+      accessToken: token
     });
   } catch (error) {
-    res.status(500).json({ success: false, error: 'Failed to login user' });
-  }
-};
-
-export const getUserPreferences = async (req, res) => {
-  try {
-    const preferences = await Preferences.find();
-    res.status(200).json({ success: true, data: preferences });
-  } catch (error) {
-    res.status(500).json({ success: false, error: 'Failed to get preferences' });
-  }
-};
-
-export const setUserPreferences = async (req, res) => {
-  const { userId, startDate, endDate, destination, vacationType } = req.body;
-  try {
-    const preferences = await Preferences.findOneAndUpdate(
-      { user: userId },
-      { startDate, endDate, destination, vacationType },
-      { new: true, upsert: true }
-    );
-    res.status(200).json({ success: true, data: preferences });
-  } catch (error) {
-    res.status(500).json({ success: false, error: 'Failed to set preferences' });
+    res.status(500).json({ success: false, error: 'Failed to login user', message: error.message });
   }
 };
