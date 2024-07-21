@@ -1,26 +1,34 @@
-import mongoose from 'mongoose';
+import { DataTypes } from 'sequelize';
+import sequelize from './index.js';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
-const userSchema = new mongoose.Schema({
-  username: { type: String, required: true, unique: true },
-  password: { type: String, required: true },
-  accessToken: { type: String }
+const User = sequelize.define('User', {
+  userName: {  // Adjusted column name to match table schema
+    type: DataTypes.STRING,
+    allowNull: false,
+    unique: true
+  },
+  userPassword: {  // Adjusted column name to match table schema
+    type: DataTypes.STRING,
+    allowNull: false
+  },
+  userAccessCode: {  // Added column for user access code
+    type: DataTypes.STRING,
+    allowNull: true
+  }
+}, {
+  tableName: 'tbl_35_user',  // Specify the custom table name here
+  timestamps: false  // Disable automatic timestamp columns
 });
 
-userSchema.pre('save', async function(next) {
-  if (!this.isModified('password')) return next();
-  const salt = await bcrypt.genSalt(10);
-  this.password = await bcrypt.hash(this.password, salt);
-  next();
-});
-
-userSchema.methods.matchPassword = async function(enteredPassword) {
-  return await bcrypt.compare(enteredPassword, this.password);
+User.prototype.matchPassword = async function (enteredPassword) {
+  return await bcrypt.compare(enteredPassword, this.userPassword);
 };
 
-userSchema.methods.getSignedJwtToken = function() {
-  return jwt.sign({ id: this._id }, process.env.JWT_SECRET, { expiresIn: '30d' });
+User.prototype.getSignedJwtToken = function () {
+  return jwt.sign({ id: this.id }, process.env.JWT_SECRET, { expiresIn: '30d' });
 };
 
-export default mongoose.model('User', userSchema);
+export default User;
+
