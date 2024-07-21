@@ -3,7 +3,7 @@ import axios from 'axios';
 
 export const calculateVacation = async (req, res) => {
   try {
-    const preferences = await Preferences.find();
+    const preferences = await Preferences.findAll();
     if (preferences.length < 5) {
       return res.status(400).json({ success: false, error: 'Not all preferences are filled' });
     }
@@ -20,7 +20,9 @@ export const calculateVacation = async (req, res) => {
       data: { startDate, endDate, destination, vacationType, weather }
     });
   } catch (error) {
-    res.status(500).json({ success: false, error: 'Failed to calculate vacation' });
+    console.error('Error calculating vacation:', error.message);
+    console.error('Error details:', error);
+    res.status(500).json({ success: false, error: 'Failed to calculate vacation', details: error.message });
   }
 };
 
@@ -40,10 +42,12 @@ function calculateDateOverlap(preferences) {
   const earliestEndDate = new Date(Math.min.apply(null, endDates));
 
   if (latestStartDate > earliestEndDate) {
-    throw new Error('No overlapping dates');
+    console.error('No overlapping dates:', { latestStartDate, earliestEndDate });
+    throw new Error(`No overlapping dates. Latest start date is ${latestStartDate.toISOString()}, earliest end date is ${earliestEndDate.toISOString()}`);
   }
 
   return { startDate: latestStartDate, endDate: earliestEndDate };
 }
+
 
 
