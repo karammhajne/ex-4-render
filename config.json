@@ -1,0 +1,24 @@
+{
+    "development": {
+      "username": "dbusrShnkr24",
+      "password": "studDBpwWeb2!",
+      "database": "dbShnkr24stud",
+      "host": "148.66.138.145",
+      "dialect": "mysql"
+    },
+    "test": {
+      "username": "root",
+      "password": null,
+      "database": "database_test",
+      "host": "127.0.0.1",
+      "dialect": "mysql"
+    },
+    "production": {
+      "username": "root",
+      "password": null,
+      "database": "database_production",
+      "host": "127.0.0.1",
+      "dialect": "mysql"
+    }
+  }
+  
